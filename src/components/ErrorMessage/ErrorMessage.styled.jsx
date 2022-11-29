@@ -13,4 +13,4 @@ export const Message = styled.p`
 
 export const StyledPoster = styled.img`
   margin-right: 20px;
-`
+`;

@@ -2,7 +2,7 @@ import { useSearchParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { ColorRing } from "react-loader-spinner";
 import { fetchSearchMovies } from "../../services/movies-api";
-import { MovieList } from "../../components/MovieList/MovieList";
+import { MoviesList } from "../../components/MoviesList/MoviesList";
 
 import { StyledContainer, SearchForm, SearchFormButton, SearchFormInput } from "../Movies/Movies.styled";
 
@@ -69,7 +69,7 @@ const Movies = () => {
                 colors={['#e15b64', '#f47e60', '#f8b26a', '#abbd81', '#849b87']}
             />
 
-            {queryParams && movies && < MovieList movies={movies} />}
+            {queryParams && movies && < MoviesList movies={movies} />}
             
         </StyledContainer>
     )

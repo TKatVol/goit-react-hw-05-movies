@@ -46,7 +46,7 @@ const MovieDetails = () => {
                 colors={['#e15b64', '#f47e60', '#f8b26a', '#abbd81', '#849b87']}
             />
                        
-                {movieDetals && (
+            {movieDetals && (
                 <>
                     <MovieInfo movie={movieDetals} />
                                            

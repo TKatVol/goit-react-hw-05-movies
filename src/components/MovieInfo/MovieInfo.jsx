@@ -10,7 +10,7 @@ const MovieInfo = ({ movie }) => {
     const imgSrc = poster_path === null ? defaultImage : IMG_URL + poster_path;
     const date = release_date === "" ? null : `(${release_date.slice(0, -6)})`;
     const userScore = Math.round(vote_average);
-    const genresType = genres.map(({ name }) => { return name }).splice(0.3).join(' ');
+    const genresType = genres.map(({ name }) => { return name }).join(' ');
        
     return (
         <StyledCard>

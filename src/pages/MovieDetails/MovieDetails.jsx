@@ -1,6 +1,7 @@
 
 import { useLocation, useParams, Link, Outlet} from "react-router-dom";
-import { useState, useEffect, useRef} from "react";
+import { useState, useEffect, useRef, Suspense } from "react";
+import { ColorRing } from "react-loader-spinner";
 import { fetchGetMovieDetails} from "../../services/movies-api";
 import { StyledContainer, GoBackButton, AdditionalSection, Title} from "../MovieDetails/MovieDetails.styled";
 import MovieInfo from "../../components/MovieInfo/MovieInfo";
@@ -10,6 +11,7 @@ const MovieDetails = () => {
     const location = useLocation();
     const { movieId } = useParams();
     const [movieDetals, setMovieDetals] = useState(null);
+    const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     
     const href = useRef({
@@ -18,9 +20,11 @@ const MovieDetails = () => {
     });
    
     useEffect(() => {
+        setLoading(true);
         fetchGetMovieDetails(movieId)
             .then(data => { setMovieDetals(data) })
-            .catch(error => { setError(error) });
+            .catch(error => { setError(error) })
+            .finally(() => setLoading(false));
     }, [movieId]);
 
     const { pathname, search } = href.current;
@@ -31,19 +35,29 @@ const MovieDetails = () => {
           
     return (
         <StyledContainer>
-            
             <GoBackButton to={backLinkHref}>Go Back</GoBackButton>
             
-            {movieDetals && (
+            <ColorRing
+                visible={loading}
+                height="80"
+                width="80"
+                ariaLabel="blocks-loading"
+                wrapperClass="blocks-wrapper"
+                colors={['#e15b64', '#f47e60', '#f8b26a', '#abbd81', '#849b87']}
+            />
+                       
+                {movieDetals && (
                 <>
                     <MovieInfo movie={movieDetals} />
-                       
+                                           
                     <AdditionalSection>
                         <Title>Additional information</Title>
                         <Link to={"cast"}>Cast</Link>
                         <Link to={"reviews"}>Reviews</Link>
                     </AdditionalSection>
-                    <Outlet />   
+                    <Suspense fallback={null}>
+                        <Outlet />  
+                    </Suspense>    
                 </>   
             )}
                              

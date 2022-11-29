@@ -1,5 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { ColorRing } from "react-loader-spinner";
 import { ErrorMessage } from "../ErrorMessage/ErrorMessage";
 import { fetchGetMovieCast } from "../../services/movies-api";
 import defaultImage from "../../images/defaultImage.jpg";
@@ -11,16 +12,29 @@ const IMG_URL = 'https://image.tmdb.org/t/p/w500';
 const Cast = () => {
     const { movieId } = useParams();
     const [castDetals, setCastDetals] = useState(null);
+    const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
 
     useEffect(() => {
+        setLoading(true);
         fetchGetMovieCast(movieId)
             .then(data => { setCastDetals(data.cast) })
-            .catch(error => { setError(error) });
+            .catch(error => { setError(error) })
+            .finally(() => setLoading(false));
     }, [movieId]);
 
     return (
+        
         <CastSection>
+            <ColorRing
+                visible={loading}
+                height="80"
+                width="80"
+                ariaLabel="blocks-loading"
+                wrapperClass="blocks-wrapper"
+                colors={['#e15b64', '#f47e60', '#f8b26a', '#abbd81', '#849b87']}
+            />
+            
             {castDetals &&
                 <ul>
                     {castDetals.map(({ id, original_name, profile_path, character }) => {

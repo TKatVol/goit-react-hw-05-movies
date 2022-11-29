@@ -1,5 +1,6 @@
 import { useSearchParams } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { ColorRing } from "react-loader-spinner";
 import { fetchSearchMovies } from "../../services/movies-api";
 import { MovieList } from "../../components/MovieList/MovieList";
 
@@ -7,6 +8,7 @@ import { StyledContainer, SearchForm, SearchFormButton, SearchFormInput } from "
 
 const Movies = () => {
     const [movies, setMovies] = useState(null);
+    const [loading, setLoading] = useState(false);
     const [searchParams, setSearchParams] = useSearchParams();
     const queryParams = searchParams.get("query");
         
@@ -26,15 +28,19 @@ const Movies = () => {
             return;
         };
 
-        fetchSearchMovies(queryParams).then(({ results }) => {
-            if (results.length === 0) {
-                clearMoviesList();
-                alert('Oops.. Not found!');
-                return;
-            };
+        setLoading(true);
 
-            setMovies(results);
-        });
+        fetchSearchMovies(queryParams)
+            .then(({ results }) => {
+                if (results.length === 0) {
+                    clearMoviesList();
+                    alert('Oops.. Not found!');
+                    return;
+                };
+
+                setMovies(results);
+            })
+            .finally(() => setLoading(false));
     }, [queryParams]);
 
     const clearMoviesList = () => {
@@ -53,7 +59,16 @@ const Movies = () => {
                 />
                 <SearchFormButton type="submit">Search</SearchFormButton>
             </SearchForm>
-                       
+
+            <ColorRing
+                visible={loading}
+                height="80"
+                width="80"
+                ariaLabel="blocks-loading"
+                wrapperClass="blocks-wrapper"
+                colors={['#e15b64', '#f47e60', '#f8b26a', '#abbd81', '#849b87']}
+            />
+
             {queryParams && movies && < MovieList movies={movies} />}
             
         </StyledContainer>
